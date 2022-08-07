@@ -36,21 +36,21 @@ export default {
     },
     orderLabel: {
       type: String,
-      required: true,
+      // required: true,
     },
     stateLabel: {
       type: String,
-      required: true,
+      // required: true,
     },
     // 下拉数据
     dropDownList: {
       type: Array,
-      required: true,
+      // required: true,
     },
     // 表单数据
     formInline: {
       type: Object,
-      required: true,
+      // required: true,
     },
   },
   data() {

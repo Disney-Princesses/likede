@@ -42,6 +42,7 @@
       ></MyPagination>
     </el-card>
     <MyAddDialog ref="add_edit" @getRefresh="changePage" :dialogVisible.sync="dialogVisible"></MyAddDialog>
+    <DetailTable ref="detaiDialog" :areaDetailVisible.sync="areaDetailVisible"></DetailTable>
   </div>
 </template>
 
@@ -52,7 +53,8 @@ import MyTable from '@/components/MyTable'
 import MySpan from '../components/MySpan'
 import MyPagination from '@/components/MyPagination'
 import MyAddDialog from './components/MyAddDialog'
-import { delAreaApi, getAreaListApi } from '@/api/point'
+import DetailTable from './components/DetailTable'
+import { delAreaApi, getAreaListApi, pointSearch } from '@/api/point'
 export default {
   data() {
     return {
@@ -66,6 +68,7 @@ export default {
       btnLoading: false, // 按钮加载状态
       searchVal: '', //搜索值
       dialogVisible: false, //弹出框的显示控制
+      areaDetailVisible: false, //区域详情的显示控制
     }
   },
   components: {
@@ -75,6 +78,7 @@ export default {
     MySpan,
     MyPagination,
     MyAddDialog,
+    DetailTable
   },
   created() {
     // 获取区域列表数据
@@ -103,8 +107,15 @@ export default {
       this.searchVal = val
     },
     // 查看详情
-    detail(val) {
-      console.log(val.data)
+    async detail(val) {
+      this.$refs.detaiDialog.loading = true
+      this.areaDetailVisible = true
+      // console.log(val.data)
+      this.$refs.detaiDialog.areaName = val.data.name
+      const {data} = await pointSearch({regionId:val.data.id})
+      // console.log(data);
+      this.$refs.detaiDialog.areaNodeList = data.currentPageRecords
+      this.$refs.detaiDialog.loading = false
     },
     // 修改
     edit(val){

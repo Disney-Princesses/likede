@@ -58,3 +58,19 @@ export const delAreaApi = (id) => {
         method: 'DELETE'
     })
 }
+
+/**
+ * 点位搜索
+ * @param {Object} params 
+ * @returns Promise
+    pageIndex			
+    pageSize			
+    name		点位名称
+    regionId	区域id
+ */
+export const pointSearch = (params) => {
+    return request({
+        url: 'vm-service/node/search',
+        params
+    })
+}

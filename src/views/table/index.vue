@@ -21,9 +21,14 @@
             : []
         "
       >
-        <el-button @click="handleClick" type="text" size="small"
-          >查看详情</el-button
-        >
+        <template v-slot="taskId">
+          <el-button
+            @click="handleClick(taskId.taskId.row.taskId)"
+            type="text"
+            size="small"
+            >查看详情</el-button
+          >
+        </template>
       </tableModule>
       <!-- 底部部分 -->
       <div class="bottom">
@@ -42,7 +47,7 @@
       </div>
     </div>
     <!-- 详情对话框 -->
-    <My-dialog :dialogVisible.sync="dialogVisible"></My-dialog>
+    <My-dialog ref="dialog" :dialogVisible.sync="dialogVisible" :id="id" ></My-dialog>
   </div>
 </template>
 
@@ -81,6 +86,7 @@ export default {
       nextDisable: false,
       // 控制对话框显隐
       dialogVisible: false,
+      id: '',
     }
   },
 
@@ -102,15 +108,16 @@ export default {
             .replace('-', '.')
         })
         this.WorkOrderDate = data
-        console.log(data)
+        // console.log(data)
       } catch (error) {
         console.log(error)
       }
     },
     // 点击获取工单详情
-    handleClick(e) {
+    handleClick(id) {
       //  显示对话框
       this.dialogVisible = true
+      this.$refs.dialog.getTaskInfo(id)
     },
     // 下一页
     getNextPage() {
@@ -134,6 +141,7 @@ export default {
     },
     // 点击搜索
     submit(data) {
+      console.log(data)
       // 编号
       this.taskSearchData.taskCode = data.userCode
       // 工单状态 1:代办,2:进行,3:取消,4:完成
@@ -155,7 +163,7 @@ export default {
           this.taskSearchData.status = ''
           break
       }
-      console.log(data.region)
+      // console.log(data.region)
       // 获取工单数据
       this.taskSearch(this.taskSearchData)
     },

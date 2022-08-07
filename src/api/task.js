@@ -10,3 +10,14 @@ export const taskSearch = (params) => {
     params,
   })
 }
+
+/**
+ * 通过工单Id获取工单详细信息
+ * @param {String} taskId //工单Id
+ * @returns
+ */
+export const getTaskInfoApi = (taskId) => {
+  return request({
+    url: '/task-service/task/taskInfo/' + taskId,
+  })
+}

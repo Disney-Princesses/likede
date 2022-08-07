@@ -24,7 +24,9 @@
     <el-table-column property="userName" label="运营人员"> </el-table-column>
     <el-table-column property="createTime" label="创建日期"> </el-table-column>
     <el-table-column label="操作">
-      <slot></slot>
+      <template slot-scope="scope">
+        <slot :taskId="scope"></slot>
+      </template>
       <!-- <template slot-scope="scope">
         <el-button @click="handleClick(scope.row)" type="text" size="small"
           >查看详情</el-button

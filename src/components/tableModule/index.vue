@@ -22,6 +22,7 @@
     >
     </el-table-column>
     <el-table-column property="userName" label="运营人员"> </el-table-column>
+    <!-- <el-table-column property="userName" label="运维人员"> </el-table-column> -->
     <el-table-column property="createTime" label="创建日期"> </el-table-column>
     <el-table-column label="操作">
       <template slot-scope="scope">

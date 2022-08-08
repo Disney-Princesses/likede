@@ -110,11 +110,12 @@ export default {
       try {
         const { data } = await TaskOperationApi(taskData)
         data?.currentPageRecords?.forEach((item) => {
-          item.createType = handleStatus(item.taskStatus)
+          item.createType = item.createType === 1 ? '手动' : '自动'
           item.createTime = handleTime(item.createTime)
           item.updateTime = handleTime(item.updateTime)
         })
         this.WorkOrderDate = data
+        console.log(data)
       } catch (error) {
         console.log(error)
       }

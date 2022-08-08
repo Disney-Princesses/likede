@@ -1,6 +1,7 @@
 <template>
   <div class="search">
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <!-- 搜索输入框 -->
       <el-form-item :label="orderLabel + ':'">
         <el-input
           v-model.trim="formInline.userCode"
@@ -8,6 +9,7 @@
           clearable
         ></el-input>
       </el-form-item>
+      <!-- 下拉选项框，可选择是否显示 -->
       <el-form-item :label="stateLabel + ':'" v-if="dropDown">
         <el-select v-model="formInline.region" placeholder="请选择" clearable>
           <el-option
@@ -19,10 +21,11 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <!-- 搜索按钮 -->
         <el-button
           type="primary"
           icon="el-icon-search"
-          @click="$emit('click', formInline)"
+          @click="$emit('searchClick', formInline)"
           >查询</el-button
         >
       </el-form-item>
@@ -38,10 +41,12 @@ export default {
       type: Boolean,
       default: false,
     },
+    // 输入框的名字
     orderLabel: {
       type: String,
       // required: true,
     },
+    // 下拉框的名字
     stateLabel: {
       type: String,
       // required: true,

@@ -42,6 +42,7 @@ export default {
       type: Array,
       required: true,
     },
+    // 员工工作列表
     userDate: {
       type: Array,
       required: true,

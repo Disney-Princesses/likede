@@ -25,7 +25,7 @@ export const login = (data) => {
 }
 
 /**
- *
+ *获取用户基本信息
  * @param {*} id  用户id
  * @returns Promise
  */

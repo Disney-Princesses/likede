@@ -127,7 +127,7 @@ export default {
     editClick(val) {
       console.log(val)
       this.isVisible = true
-      this.$refs.addpeople.formPeople = val.data
+        this.$refs.addpeople.formPeople = JSON.parse(JSON.stringify(val.data))
     },
     // 删除按钮
     async delClick(val) {

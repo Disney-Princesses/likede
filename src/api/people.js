@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import store from '@/store'
+import dayjs from 'dayjs'
 
 /**
  * 人员搜索(列表页)
@@ -102,6 +103,63 @@ export const delPeople = (id) => {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+    },
+  })
+}
+
+/**
+ * 人员工作量列表
+ * @returns
+ */
+export const getWorkList = (params) => {
+  return request({
+    url: '/user-service/user/searchUserWork',
+    method: 'GET',
+    params,
+  })
+}
+
+/**
+ *获取用户工作量(详情)
+ * @param {*} params
+ * userId
+ * start	是	2020-10-01 00:00:00
+ * end	是	2020-10-31 00:00:00
+ * @returns
+ */
+export const PeopleDetailW = (id) => {
+  console.log(dayjs().startOf('week'))
+  return request({
+    url: '/task-service/task/userWork',
+    method: 'GET',
+    params: {
+      userId: id,
+      start: dayjs().startOf('week').format('YYYY-MM-DD HH:mm:ss'),
+      end: dayjs().endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+    },
+  })
+}
+
+export const PeopleDetailM = (id) => {
+  return request({
+    url: '/task-service/task/userWork',
+    method: 'GET',
+    params: {
+      userId: id,
+      start: dayjs().startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+      end: dayjs().endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+    },
+  })
+}
+
+export const PeopleDetailY = (id) => {
+  return request({
+    url: '/task-service/task/userWork',
+    method: 'GET',
+    params: {
+      userId: id,
+      start: dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
+      end: dayjs().endOf('day').format('YYYY-MM-DD HH:mm:ss'),
     },
   })
 }

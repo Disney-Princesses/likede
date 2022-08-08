@@ -144,12 +144,12 @@ export default {
         });
     },
     // 下一页
-    async nextPage() {
+    nextPage() {
       this.pageIndex++
       this.changePage()
     },
     // 上一页
-    async prevPage() {
+    prevPage() {
       this.pageIndex--
       this.changePage()
     },

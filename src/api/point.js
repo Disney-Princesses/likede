@@ -86,3 +86,54 @@ export const partnerSearchApi = (params) => {
         params
     })
 }
+
+/**
+ * 新增合作商
+ * @param {Object} data 
+ * @returns  Promise
+ */
+export const addPartnerApi = (data) => {
+    return request({
+        url: '/user-service/partner',
+        method: 'POST',
+        data
+    })
+}
+
+
+/**
+ * 修改合作商
+ * @param {String} id 
+ * @returns  Promise
+ */
+ export const editPartnerApi = (id,data) => {
+    return request({
+        url: '/user-service/partner/' + id,
+        method: 'PUT',
+        data
+    })
+}
+
+/**
+ * 删除合作商
+ * @param {String} id 
+ * @returns Promise
+ */
+export const delPartnerApi = (id) => {
+    return request({
+        url: '/user-service/partner/' + id,
+        method: 'DELETE'
+    })
+}
+
+/**
+ * 重置合作商密码
+ * @param {String} id 
+ * @returns Promise
+ */
+export const resetPartnerPwdApi = (id) => {
+    return request({
+        url: '/user-service/partner/resetPwd/' + id,
+        method: 'PUT'
+    })
+}

@@ -10,14 +10,11 @@
       :dialogVisible.sync="visible"
      :currentTypeName ='currentTypeName'
     ></MessageBox>
-    <!-- 商品管理模块弹窗 -->
-    <GoodsDialog></GoodsDialog>
   </div>
 </template>
 
 <script>
 import MessageBox from '../MessageBox'
-import GoodsDialog from '../GoodsDialog'
 export default {
   props: {},
   data() {
@@ -33,7 +30,6 @@ export default {
   },
   components: {
     MessageBox,
-    GoodsDialog
   },
   created() {},
 

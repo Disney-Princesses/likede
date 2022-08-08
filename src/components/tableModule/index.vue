@@ -1,24 +1,21 @@
 <template>
   <el-table
     ref="singleTable"
-    :data="WorkOrderDate"
+    :data="userDate"
     highlight-current-row
     @current-change="handleCurrentChange"
     style="width: 100%"
     :header-cell-style="{ background: '#f3f6fb' }"
     empty-text="暂时没有数据了"
   >
-    <el-table-column type="index" width="100" label="序号"> </el-table-column>
-    <el-table-column property="taskCode" label="工单编号" width="200">
+    <el-table-column type="index" :index="number" width="100" label="序号">
     </el-table-column>
-    <el-table-column property="innerCode" label="设备编号" width="200">
-    </el-table-column>
-    <el-table-column property="taskType.typeName" label="工单类型">
-    </el-table-column>
-    <el-table-column property="createType" label="工单方式"> </el-table-column>
     <el-table-column
-      property="taskStatusTypeEntity.statusName"
-      label="工单状态"
+      :property="item"
+      :label="userTitleList[index]"
+      v-for="(item, index) in userKeyList"
+      :key="index"
+      width="200"
     >
     </el-table-column>
     <el-table-column property="userName" label="运营人员"> </el-table-column>
@@ -26,14 +23,10 @@
     <el-table-column property="createTime" label="创建日期"> </el-table-column>
     <el-table-column label="操作">
       <template slot-scope="scope">
-        <slot :taskId="scope"></slot>
+        <!-- 自定义操作列的具名作用域插槽 -->
+        <slot name="custom" :data="scope.row"></slot>
       </template>
-      <!-- <template slot-scope="scope">
-        <el-button @click="handleClick(scope.row)" type="text" size="small"
-          >查看详情</el-button
-        >
-        <el-button type="text" size="small">编辑</el-button>
-      </template> -->
+      <slot> </slot>
     </el-table-column>
   </el-table>
 </template>
@@ -41,8 +34,21 @@
 <script>
 export default {
   props: {
-    WorkOrderDate: {
+    // 要渲染的属性字段
+    userKeyList: {
       type: Array,
+      required: true,
+    },
+    // 标头数数组
+    userTitleList: {
+      type: Array,
+      required: true,
+    },
+    userDate: {
+      type: Array,
+      required: true,
+    },
+    pageIndex: {
       required: true,
     },
   },
@@ -58,6 +64,11 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentRow = val
+    },
+  },
+  computed: {
+    number() {
+      return this.pageIndex * 10 - 9
     },
   },
 }

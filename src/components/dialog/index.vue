@@ -1,15 +1,11 @@
 <template>
   <el-dialog
-    title="提示"
-    :visible.sync="dialogVisible"
+    title="工单详情"
+    @close="onClose"
     width="30%"
-    :before-close="handleClose"
+    :visible="dialogVisible"
   >
-    <span>这是一段信息</span>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-    </span>
+    <slot></slot>
   </el-dialog>
 </template>
 
@@ -21,7 +17,11 @@ export default {
 
   created() {},
 
-  methods: {},
+  methods: {
+    onClose() {
+      this.$emit('update:dialogVisible', false)
+    },
+  },
 }
 </script>
 

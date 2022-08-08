@@ -8,12 +8,12 @@
     <DetailInfo :detailInfo="detailInfo" ref="detail"></DetailInfo>
     <span slot="footer" class="dialog-footer">
       <el-button>重新创建</el-button>
-      <!-- <el-button type="primary">确 定</el-button> -->
     </span>
   </el-dialog>
 </template>
 
 <script>
+import { handleTime, handleStatus } from '@/utils/handleTime.vue'
 import { getTaskInfoApi } from '@/api'
 import DetailInfo from './detailInfo.vue'
 export default {
@@ -40,9 +40,12 @@ export default {
 
   methods: {
     async getTaskInfo(id) {
-      const res = await getTaskInfoApi(id)
-      this.detailInfo = res.data
-      // this.$refs.detail.getDetailInfo(res.data)
+      const { data } = await getTaskInfoApi(id)
+      data.createType = data.createType === 0 ? '自动' : '手动'
+      data.createTime = handleTime(data.createTime)
+      data.updateTime = handleTime(data.updateTime)
+      data.taskStatus = handleStatus(data.taskStatus)
+      this.detailInfo = data
     },
     onClose() {
       this.$emit('update:dialogVisible', false)
@@ -52,6 +55,11 @@ export default {
 </script>
 
 <style scoped lang="less">
+::v-deep .el-dialog__title {
+  line-height: 22px;
+  font-size: 16px;
+  font-weight: 600;
+}
 ::v-deep .el-dialog {
   width: 630px !important;
   .el-dialog__footer {

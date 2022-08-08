@@ -51,11 +51,11 @@
 
 <script>
 // 引入组件
-import headSearch from '@/components/headSearch'
-import newImportBtn from '@/components/newImportBtn'
-import tableModule from '@/components/tableModule'
-import layPage from '@/components/layPage'
-import addPeople from '@/components/add-people'
+import headSearch from './components/headSearch'
+import newImportBtn from './components/newImportBtn'
+import tableModule from './components/tableModule'
+import layPage from './components/layPage'
+import addPeople from './components/add-people'
 // 引入api
 import { getPeopleList, delPeople } from '@/api'
 export default {

@@ -12,7 +12,11 @@
     <!-- 内容部分 -->
     <div class="contentMain">
       <!-- 按钮部分 -->
-      <newImportButton :isImportBtn="true"></newImportButton>
+      <newImportButton
+        :isImportBtn="true"
+        @addTask="addTask"
+        @taskConfig="taskConfig"
+      ></newImportButton>
       <!-- 表单部分 -->
       <tableModule
         :WorkOrderDate="
@@ -21,9 +25,14 @@
             : []
         "
       >
-        <el-button @click="handleClick" type="text" size="small"
-          >查看详情</el-button
-        >
+        <template v-slot="taskId">
+          <el-button
+            @click="handleClick(taskId.taskId.row.taskId)"
+            type="text"
+            size="small"
+            >查看详情</el-button
+          >
+        </template>
       </tableModule>
       <!-- 底部部分 -->
       <div class="bottom">
@@ -42,7 +51,17 @@
       </div>
     </div>
     <!-- 详情对话框 -->
-    <My-dialog :dialogVisible.sync="dialogVisible"></My-dialog>
+    <My-dialog
+      ref="dialog"
+      :dialogVisible.sync="dialogVisible"
+      :id="id"
+    ></My-dialog>
+
+    <!-- 新增工单的对话框 -->
+    <addDialog :visible.sync="addvisible"></addDialog>
+
+    <!-- 工单配置的对话框 -->
+    <ConfigDialog :visible.sync="configvisible"></ConfigDialog>
   </div>
 </template>
 
@@ -52,6 +71,9 @@ import newImportButton from '@/components/newImportBtn'
 import tableModule from '@/components/tableModule'
 import { taskSearch } from '@/api'
 import MyDialog from './components/dialog.vue'
+import addDialog from './addTask/addTaskDialog.vue'
+import ConfigDialog from './config/taskConfig.vue'
+// import addGoodsDialog from './components/taskDetail.vue'
 export default {
   data() {
     return {
@@ -81,6 +103,10 @@ export default {
       nextDisable: false,
       // 控制对话框显隐
       dialogVisible: false,
+      id: '',
+      visible: false,
+      addvisible: false,
+      configvisible: false,
     }
   },
 
@@ -108,9 +134,10 @@ export default {
       }
     },
     // 点击获取工单详情
-    handleClick(e) {
+    handleClick(id) {
       //  显示对话框
       this.dialogVisible = true
+      this.$refs.dialog.getTaskInfo(id)
     },
     // 下一页
     getNextPage() {
@@ -134,6 +161,7 @@ export default {
     },
     // 点击搜索
     submit(data) {
+      // console.log(data)
       // 编号
       this.taskSearchData.taskCode = data.userCode
       // 工单状态 1:代办,2:进行,3:取消,4:完成
@@ -155,9 +183,17 @@ export default {
           this.taskSearchData.status = ''
           break
       }
-      console.log(data.region)
+      // console.log(data.region)
       // 获取工单数据
       this.taskSearch(this.taskSearchData)
+    },
+    // 点击新建
+    addTask() {
+      this.addvisible = true
+    },
+    // 点击工单配置
+    taskConfig() {
+      this.configvisible = true
     },
   },
   components: {
@@ -165,6 +201,8 @@ export default {
     newImportButton,
     tableModule,
     MyDialog,
+    addDialog,
+    ConfigDialog,
   },
   computed: {
     isdisable() {

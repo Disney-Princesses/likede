@@ -9,53 +9,52 @@
     empty-text="暂时没有数据了"
   >
     <el-table-column type="index" width="100" label="序号"> </el-table-column>
-    <el-table-column property="taskCode" label="工单编号" width="200">
+    <el-table-column property="className" label="商品类型名称" width="800">
     </el-table-column>
-    <el-table-column property="innerCode" label="设备编号" width="200">
-    </el-table-column>
-    <el-table-column property="taskType.typeName" label="工单类型">
-    </el-table-column>
-    <el-table-column property="createType" label="工单方式"> </el-table-column>
-    <el-table-column
-      property="taskStatusTypeEntity.statusName"
-      label="工单状态"
-    >
-    </el-table-column>
-    <el-table-column property="userName" label="运营人员"> </el-table-column>
-    <!-- <el-table-column property="userName" label="运维人员"> </el-table-column> -->
-    <el-table-column property="createTime" label="创建日期"> </el-table-column>
     <el-table-column label="操作">
-      <template slot-scope="scope">
-        <slot :taskId="scope"></slot>
-      </template>
+      <slot></slot>
       <!-- <template slot-scope="scope">
         <el-button @click="handleClick(scope.row)" type="text" size="small"
           >查看详情</el-button
         >
         <el-button type="text" size="small">编辑</el-button>
       </template> -->
+      <template slot-scope="scope">
+        <el-button
+          type="text"
+          size="medium "
+          @click="$emit('editType', scope.row)"
+          >修改</el-button
+        >
+        <el-button type="text" size="medium " @click="$emit('del',scope.row)"
+          >删除</el-button
+        >
+      </template>
     </el-table-column>
   </el-table>
 </template>
 
 <script>
+
 export default {
+  data() {
+    return {
+      currentRow: null,
+      visible: false,
+    }
+  },
   props: {
     WorkOrderDate: {
       type: Array,
       required: true,
     },
-  },
-  data() {
-    return {
-      currentRow: null,
-    }
-  },
-
-  methods: {
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row)
+    currentTypeName: {
+      type: String,
+      default: '',
     },
+  },
+  created() {},
+  methods: {
     handleCurrentChange(val) {
       this.currentRow = val
     },
@@ -66,6 +65,7 @@ export default {
 <style scoped lang="scss">
 ::v-deep.el-table--enable-row-transition .el-table__body td {
   border: 0;
+  // padding: 20px;
 }
 ::v-deep.el-table::before {
   height: 0 !important;

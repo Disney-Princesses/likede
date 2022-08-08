@@ -1,21 +1,18 @@
 <template>
   <div class="appBtn">
-    <el-button type="primary" class="newBtn">
-      <i class="el-icon-circle-plus-outline"></i>
-      新建</el-button
-    >
-    <el-button type="primary" plain class="importBtn" v-if="isImportBtn"
-      >导入数据</el-button
-    >
+    <el-button type="primary" class="newBtn" @click="$emit('click', $event)">
+      <i class="el-icon-circle-plus-outline" v-if="pic"></i>
+      <slot> 新建</slot>
+    </el-button>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    isImportBtn: {
+    pic: {
       type: Boolean,
-      // required: true,
+      default: true,
     },
   },
   data() {
@@ -43,13 +40,6 @@ export default {
 
     &:hover {
       background: linear-gradient(135deg, #ff7d43, #db3602) !important;
-    }
-  }
-  .importBtn {
-    color: #655b56 !important;
-    background-color: #fbf4f0 !important;
-    &:hover {
-      background-color: #f3e7e1 !important;
     }
   }
 }

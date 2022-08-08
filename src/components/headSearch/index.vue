@@ -2,7 +2,11 @@
   <div class="search">
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item :label="orderLabel + ':'">
-        <el-input v-model="formInline.userCode" placeholder="请输入"></el-input>
+        <el-input
+          v-model.trim="formInline.userCode"
+          placeholder="请输入"
+          clearable
+        ></el-input>
       </el-form-item>
       <el-form-item :label="stateLabel + ':'" v-if="dropDown">
         <el-select v-model="formInline.region" placeholder="请选择" clearable>
@@ -36,21 +40,21 @@ export default {
     },
     orderLabel: {
       type: String,
-      required: true,
+      // required: true,
     },
     stateLabel: {
       type: String,
-      required: true,
+      // required: true,
     },
     // 下拉数据
     dropDownList: {
       type: Array,
-      required: true,
+      // required: true,
     },
     // 表单数据
     formInline: {
       type: Object,
-      required: true,
+      // required: true,
     },
   },
   data() {

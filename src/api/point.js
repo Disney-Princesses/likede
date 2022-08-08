@@ -137,3 +137,52 @@ export const resetPartnerPwdApi = (id) => {
         method: 'PUT'
     })
 }
+
+/**
+ * 点位搜索
+ * pageIndex			
+pageSize			
+name		点位名称
+regionId			区域id
+ * @param {Object} params 
+ * @returns Promise
+ */
+export const pointSearchApi = (params) => {
+    return request({
+        url: '/vm-service/node/search',
+        params
+    })
+}
+
+/**
+ * 获取点位详情
+ * @param {String} id 点位ID 
+ * @returns Promise
+ */
+export const pointDetailApi = (id) => {
+    return request({
+        url: '/vm-service/node/vmList/' + id,
+    })
+}
+
+/**
+ * 删除点位
+ * @param {String} id 点位id
+ * @returns Promise
+ */
+export const delPointApi = (id) => {
+    return request({
+        url: '/vm-service/node/' + id,
+        method: 'DELETE'
+    })
+}
+
+/**
+ * 商圈列表
+ * @returns 
+ */
+export const businessArea = () => {
+    return request({
+        url: 'vm-service/businessType'
+    })
+}

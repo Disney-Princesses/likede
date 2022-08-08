@@ -74,3 +74,15 @@ export const pointSearch = (params) => {
         params
     })
 }
+
+/**
+ * 合作商搜索
+ * @param {Object} params 
+ * @returns Promise
+ */
+export const partnerSearchApi = (params) => {
+    return request({
+        url: '/user-service/partner/search',
+        params
+    })
+}

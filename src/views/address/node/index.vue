@@ -61,7 +61,12 @@
       ref="pointDetail"
       :detailVisible.sync="detailVisible"
     ></detailDialog>
-    <AddDialog :areaSearchList="areaSearchList" :dialogVisible.sync="dialogVisible"></AddDialog>
+    <AddDialog
+      ref="AddDialog"
+      @getRefresh="pointSearch"
+      :areaSearchList="areaSearchList"
+      :dialogVisible.sync="dialogVisible"
+    ></AddDialog>
   </div>
 </template>
 
@@ -74,6 +79,8 @@ import MyPagination from '@/components/MyPagination'
 import detailDialog from './components/detailDialog.vue'
 import AddDialog from './components/AddDialog.vue'
 import { delPointApi, getAreaListApi, pointSearchApi } from '@/api/point'
+import { TextToCode } from 'element-china-area-data'
+
 export default {
   data() {
     return {
@@ -105,7 +112,7 @@ export default {
     MySpan,
     MyPagination,
     detailDialog,
-    AddDialog
+    AddDialog,
   },
   created() {
     this.getAreaSearchInput()
@@ -142,7 +149,7 @@ export default {
           name: this.keywords,
           regionId: this.areaName,
         })
-        // console.log(data)
+        console.log(data)
         this.pageIndex = data.pageIndex
         this.totalCount = data.totalCount
         this.totalPage = data.totalPage
@@ -166,7 +173,31 @@ export default {
       this.$refs.pointDetail.pointId = val.data.id
     },
     // 修改
-    edit(val) {},
+    edit(val) {
+      console.log(val.data)
+      this.dialogVisible = true
+      this.$refs.AddDialog.formData.id = val.data.id
+      this.$refs.AddDialog.formData.name = val.data.name
+      this.$refs.AddDialog.formData.regionId = val.data.regionId
+      this.$refs.AddDialog.formData.businessId = val.data.businessId
+      this.$refs.AddDialog.formData.ownerId = val.data.ownerId
+      let arr = val.data.addr.split('-')
+      this.$refs.AddDialog.formData.addr2 = arr[arr.length - 1]
+      console.log(arr.length)
+      let arr2 = []
+      if (arr.length === 4) {
+        arr2.push(
+          TextToCode[arr[0]].code,
+          TextToCode[arr[0]][arr[1]].code,
+          TextToCode[arr[0]][arr[1]][arr[2]].code,
+        )
+      } else if (arr.length === 3) {
+        arr2.push(TextToCode[arr[0]].code, TextToCode[arr[0]][arr[1]].code)
+      }
+
+      this.$refs.AddDialog.formData.selections = arr2
+      this.$refs.AddDialog.formData.createUserId = val.data.createUserId
+    },
     // 删除
     del(val) {
       this.$confirm('此操作将永久删除该点位, 是否继续?', '提示', {

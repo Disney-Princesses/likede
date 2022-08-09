@@ -186,3 +186,30 @@ export const businessArea = () => {
         url: 'vm-service/businessType'
     })
 }
+
+/**
+ * 新增点位
+ * @param {Object} data 
+ * @returns 
+ */
+export const addNewPoint = (data) => {
+    return request({
+        url: '/vm-service/node',
+        method: 'POST',
+        data
+    })
+}
+
+/**
+ * 修改点位
+ * @param {String} id 
+ * @param {Object} data 
+ * @returns  Promise
+ */
+export const editPointApi = (id,data) => {
+    return request({
+        url: '/vm-service/node/' + id,
+        method: 'PUT',
+        data
+    })
+}

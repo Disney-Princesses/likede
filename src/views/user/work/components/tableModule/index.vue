@@ -15,7 +15,7 @@
       :label="userTitleList[index]"
       v-for="(item, index) in userKeyList"
       :key="index"
-      width="200"
+      width="180"
     >
     </el-table-column>
 

@@ -127,6 +127,7 @@ export const getWorkList = (params) => {
  * end	是	2020-10-31 00:00:00
  * @returns
  */
+// 本周
 export const PeopleDetailW = (id) => {
   console.log(dayjs().startOf('week'))
   return request({
@@ -139,7 +140,7 @@ export const PeopleDetailW = (id) => {
     },
   })
 }
-
+// 本月
 export const PeopleDetailM = (id) => {
   return request({
     url: '/task-service/task/userWork',
@@ -151,7 +152,7 @@ export const PeopleDetailM = (id) => {
     },
   })
 }
-
+// 本年
 export const PeopleDetailY = (id) => {
   return request({
     url: '/task-service/task/userWork',
@@ -161,5 +162,29 @@ export const PeopleDetailY = (id) => {
       start: dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
       end: dayjs().endOf('day').format('YYYY-MM-DD HH:mm:ss'),
     },
+  })
+}
+
+/**
+ * 获取当时工单汇总信息(人员统计头部信息)
+ * @param {*} start 今天开始的时间
+ * @param {*} end 今天接受的时间
+ * @returns
+ */
+export const workerCount = (start, end) => {
+  return request({
+    url: `/task-service/task/taskReportInfo/${start}/${end}`,
+  })
+}
+
+/**
+ * 工单状态统计
+ * @param {*} start 开始时间
+ * @param {*} end 结束时间
+ * @returns 
+ */
+export const workStatus=(start,end) => {
+  return request({
+    url:`/task-service/task/collectReport/${start}/${end}`
   })
 }

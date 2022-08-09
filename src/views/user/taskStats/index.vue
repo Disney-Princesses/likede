@@ -1,31 +1,145 @@
 <template>
   <div class="app-container">
+    <!-- 头部 -->
     <el-row class="el-row">
       <el-col :span="12">
         <div class="head">
           <div class="title">运营人员（当天）</div>
           <div class="body">
             <div class="child">
-              <div class="text1">25个</div>
-              <div class="text2">历程</div>
+              <div class="text1">{{ repDate.total }}</div>
+              <div class="text2">工单总数（个）</div>
             </div>
-            <div class="child">2</div>
-            <div class="child">3</div>
-            <div class="child">4</div>
+            <div class="child">
+              <div class="text1">{{ repDate.completedTotal }}</div>
+              <div class="text2">完成工单（个）</div>
+            </div>
+            <div class="child">
+              <div class="text1">{{ repDate.cancelTotal }}</div>
+              <div class="text2">拒绝工单（个）</div>
+            </div>
+            <div class="child">
+              <div class="text1">{{ repDate.workerCount }}</div>
+              <div class="text2">运营人员数（个）</div>
+            </div>
           </div>
         </div>
       </el-col>
       <el-col :span="12">
         <div class="head h-right">
-          <div class="title">运营人员（当天）</div>
+          <div class="title">运维人员（当天）</div>
           <div class="body">
             <div class="child">
-              <div class="text1">25个</div>
-              <div class="text2">历程</div>
+              <div class="text1">{{ repDate.total }}</div>
+              <div class="text2">工单总数（个）</div>
             </div>
-            <div class="child">2</div>
-            <div class="child">3</div>
-            <div class="child">4</div>
+            <div class="child">
+              <div class="text1">{{ repDate.completedTotal }}</div>
+              <div class="text2">完成工单（个）</div>
+            </div>
+            <div class="child">
+              <div class="text1">{{ repDate.cancelTotal }}</div>
+              <div class="text2">拒绝工单（个）</div>
+            </div>
+            <div class="child">
+              <div class="text1">{{ repDate.workerCount }}</div>
+              <div class="text2">运维人员数（个）</div>
+            </div>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <!-- 主体 -->
+    <el-row class="el-row" :gutter="50">
+      <el-col :span="17">
+        <div class="body-l">
+          <div class="header">
+            <div class="title">工单状态</div>
+
+            <!-- 日期选择器 -->
+
+            <el-date-picker
+              clearable="false"
+              class="date"
+              v-model="time"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              align="right"
+              unlink-panels
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              @change="getTime"
+            >
+            </el-date-picker>
+
+            <div class="timer">
+              <span :class="{ active: 'w' === s }" @click="weekClick">周</span>
+              <span :class="{ active: 'm' === s }" @click="monthClick">月</span>
+              <span :class="{ active: 'y' === s }" @click="yearClick">年</span>
+            </div>
+          </div>
+          <div class="charts">
+            <!-- <div class="charts-m" ref="chart">
+            </div> -->
+            <MyCharts
+              v-if="isShow"
+              :finshData="finshData"
+              :cancelData="cancelData"
+              :days="days"
+            ></MyCharts>
+            <div class="role-content1" v-else>
+              <div class="empty2">
+                <img
+                  src="	http://likede2-admin.itheima.net/img/empty.87c4f71b.png"
+                  alt=""
+                />
+                <p>暂无数据</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </el-col>
+      <!-- 右侧 -->
+      <el-col :span="6" class="box bom-right bom">
+        <div class="header">
+          <div class="title" style="margin-bottom: 0">人效排名（月度）</div>
+          <el-select placeholder="全部" class="select" v-model="area">
+            <el-option
+              :label="item.name"
+              :value="item.name"
+              v-for="item in areaList"
+              :key="item.id"
+            ></el-option>
+          </el-select>
+        </div>
+
+        <div class="role-group">
+          <div class="role-list">
+            <div
+              class="role"
+              :class="{ isChecked: 'role' === r }"
+              @click="clickL"
+            >
+              运营人员
+            </div>
+            <div
+              class="role"
+              :class="{ isChecked: 'nrole' === r }"
+              @click="clickR"
+            >
+              运维人员
+            </div>
+          </div>
+        </div>
+
+        <div class="role-content">
+          <div class="empty2">
+            <img
+              src="	http://likede2-admin.itheima.net/img/empty.87c4f71b.png"
+              alt=""
+            />
+            <p>暂无数据</p>
           </div>
         </div>
       </el-col>
@@ -34,14 +148,113 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+import { workerCount, getRegionsList, workStatus } from '@/api'
+import MyCharts from './MyCharts'
 export default {
   data() {
-    return {}
+    return {
+      repDate: {
+        toral: '',
+        completedTotal: '',
+        cancelTotal: '',
+        progressTotal: '',
+        workerCount: '',
+        repair: '',
+        date: '',
+      },
+      NrepDate: {
+        toral: '',
+        completedTotal: '',
+        cancelTotal: '',
+        progressTotal: '',
+        workerCount: '',
+        repair: '',
+        date: '',
+      },
+      areaList: [],
+      area: '',
+      time: '',
+      s: 'w',
+      r: 'role',
+      workstatusList: [],
+      isShow: '',
+      finshData: [],
+      cancelData: [],
+      days: [],
+    }
   },
 
-  created() {},
+  created() {
+    // 获取当天的工单完成状况
+    this.workerCount()
+    // 获取地区列表
+    this.getRegionsList()
+    this.defaultDate()
+  },
 
-  methods: {},
+  methods: {
+    // 获取当天的工单完成状况
+    async workerCount() {
+      const start = dayjs().startOf('day').format('YYYY-MM-DD HH:mm:ss')
+      const end = dayjs().endOf('day').format('YYYY-MM-DD HH:mm:ss')
+      const res = await workerCount(start, end)
+      // console.log(res)
+      this.repDate = res.data[0]
+      this.NrepDate = res.data[1]
+    },
+    // 获取地区列表
+    async getRegionsList() {
+      const res = await getRegionsList()
+      console.log(res)
+      this.areaList = res.data.currentPageRecords
+    },
+    weekClick() {
+      this.s = 'w'
+    },
+    monthClick() {
+      this.s = 'm'
+    },
+    yearClick() {
+      this.s = 'y'
+    },
+    clickL() {
+      this.r = 'role'
+    },
+    clickR() {
+      this.r = 'nrole'
+    },
+    async getTime() {
+      console.log(this.time)
+      // 获取工单状态
+      const start = this.time[0]
+      const end = this.time[1]
+      const res = await workStatus(start, end)
+      console.log(res)
+      this.workstatusList = res.data
+      console.log(this.workstatusList)
+      this.finshData = this.workstatusList.map((item) => item.finishCount)
+      this.cancelData = this.workstatusList.map((item) => item.cancelCount)
+      this.days = this.workstatusList.map((item) =>
+        dayjs(item.collectDate).format('MM月DD日'),
+      )
+      // 判断是否显示 空状态
+      if (this.workstatusList.length === 0) {
+        this.isShow = false
+      } else {
+        this.isShow = true
+      }
+    },
+    //设置默认日期
+    defaultDate() {
+      let end = dayjs().startOf('D').format('YYYY-MM-DD') //当天
+      let beg = dayjs().startOf('M').format('YYYY-MM-DD') //当月第一天
+      this.time = [beg, end] //将值设置给插件绑定的数据 // console.log(this.dateVal)
+    },
+  },
+  components: {
+    MyCharts,
+  },
 }
 </script>
 
@@ -65,6 +278,7 @@ export default {
     min-height: 166px;
     padding: 20px;
     border-radius: 20px;
+    margin-right: 20px;
     .title {
       font-size: 16px;
       font-weight: 600;
@@ -106,6 +320,192 @@ export default {
     background: #fbefe8
       url(http://likede2-admin.itheima.net/img/operation.4120cc58.png) no-repeat
       calc(100% - 12px) 100%;
+  }
+}
+.active {
+  background: #fff;
+  box-shadow: 0 0 4px 0 rgb(0 0 0 / 11%);
+  border-radius: 7px;
+  font-weight: 600;
+  color: #333;
+}
+
+// 主体区域
+.body-l {
+  background-color: #fff;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+  height: calc(75vh - 90px);
+  min-height: 542px;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  line-height: 1.15;
+  .header {
+    display: flex;
+    .title {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+    .date {
+      width: 230px;
+      margin-right: 21px;
+      height: 32px;
+      justify-content: center;
+      align-items: center;
+      padding: 3px 10px;
+      background-color: #fff;
+      border-radius: 4px;
+      border: 1px solid #d8dde3;
+      box-sizing: border-box;
+      color: #606266;
+      display: inline-block;
+      font-size: inherit;
+      height: 40px;
+      line-height: 40px;
+      padding: 0 15px;
+      transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+      // width: 100%;
+    }
+    .timer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 129px;
+      height: 34px;
+      background: rgba(233, 243, 255, 0.37);
+      border-radius: 10px;
+      span {
+        width: 37px;
+        height: 25px;
+        font-size: 14px;
+        color: #9ca3b4;
+        cursor: pointer;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+  .charts {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex: 1;
+
+    .role-content1 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.bom-right {
+  border-radius: 20px;
+  background-color: #fff;
+  height: calc(75vh - 90px);
+  min-height: 542px;
+  margin-top: 20px;
+  background: #fff;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // width: 25%;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+    .select {
+      width: 88px;
+      .el-input__inner {
+        height: 32px;
+        line-height: 32px;
+        padding-right: 30px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .time {
+    width: 252px;
+    margin-right: 21px;
+  }
+  ::v-deep .el-range-input::placeholder {
+    color: #000;
+  }
+
+  .isChecked {
+    background: #fff;
+    // -webkit-box-shadow: 0 0 4px 0 rgb(0 0 0 / 11%);
+    box-shadow: 0 0 4px 0 rgb(0 0 0 / 11%);
+    border-radius: 7px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .empty {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .role-group {
+    width: 177px;
+    margin: 15px auto 0;
+
+    .role-list {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      height: 34px;
+      background: rgba(233, 243, 255, 0.37);
+      border-radius: 10px;
+
+      .role {
+        width: 78px;
+        height: 25px;
+        text-align: center;
+        line-height: 25px;
+        font-size: 14px;
+        color: #000;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .role-content {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  ::v-deep .empty2 {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>

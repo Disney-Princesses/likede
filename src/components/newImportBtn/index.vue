@@ -1,11 +1,16 @@
 <template>
   <div class="appBtn">
-    <el-button type="primary" class="newBtn">
+    <el-button type="primary" class="newBtn" @click="addTask">
       <i class="el-icon-circle-plus-outline"></i>
       新建</el-button
     >
-    <el-button type="primary" plain class="importBtn" v-if="isImportBtn"
-      >导入数据</el-button
+    <el-button
+      type="primary"
+      plain
+      class="importBtn"
+      v-if="isImportBtn"
+      @click="taskConfig"
+      >工单配置</el-button
     >
   </div>
 </template>
@@ -15,7 +20,7 @@ export default {
   props: {
     isImportBtn: {
       type: Boolean,
-      required: true,
+      // required: true,
     },
   },
   data() {
@@ -24,7 +29,14 @@ export default {
 
   created() {},
 
-  methods: {},
+  methods: {
+    addTask() {
+      this.$emit('addTask')
+    },
+    taskConfig() {
+      this.$emit('taskConfig')
+    },
+  },
 }
 </script>
 

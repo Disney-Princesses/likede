@@ -3,7 +3,7 @@ import axios from 'axios'
 import store from '@/store'
 import { getTokenTime } from './auth'
 import router from '@/router'
-import { Message } from 'element-ui'
+import { Message, Notification } from 'element-ui'
 // 创建一个axios的实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -43,7 +43,13 @@ service.interceptors.response.use(
     return res
   },
   (error) => {
-    if (error?.response?.status === 401) {
+    if (error?.response?.data === '该售货机类型在使用') {
+      Notification({
+        title: '警告',
+        message: '该售货机类型在使用',
+        type: 'warning',
+      })
+    } else if (error?.response?.status === 401) {
       Message.error('登录过期')
       // 执行退出功能
       store.commit('user/setUserToken', {})
@@ -85,6 +91,18 @@ service.interceptors.response.use(
     Message.error('系统异常')
     return Promise.reject(error)
   }, */
+
+export function uploadImgToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = function () {
+      // 图片转base64完成后返回reader对象
+      resolve(reader)
+    }
+    reader.onerror = reject
+  })
+}
 
 // 导出axios实例
 export default service

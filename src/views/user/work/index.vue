@@ -1,25 +1,25 @@
 <template>
-  <div class="app-container">工作量列表</div>
+  <div class="app-container">
+    <!-- 头部搜索 -->
+  </div>
 </template>
 
 <script>
+// 引入组件
+import headSearch from './components/headSearch'
 export default {
-  data () {
-    return {
-
-    }
+  data() {
+    return {}
   },
 
-  created () {
+  created() {},
 
+  methods: {},
+
+  components: {
+    headSearch,
   },
-
-  methods: {
-
-  }
 }
 </script>
 
-<style scoped lang='less'>
-
-</style>
+<style scoped lang="less"></style>

@@ -1,10 +1,13 @@
 <template>
   <div class="app-container">
     <!-- 头部搜索 -->
-    <headSearch orderLabel="商品类型搜索" :formInline="formInline"></headSearch>
+    <Head
+      orderLabel="商品类型搜索"
+      :formInline="formInline"
+      @click="searchFn"
+    ></Head>
     <!-- 新建按钮 -->
     <CreateButton
-      @createNewType="createNewType"
       ref="create"
       :currentTypeName="currentTypeName"
     ></CreateButton>
@@ -17,84 +20,97 @@
     <!-- 底部 -->
     <FootBtn
       :totalCount="totalCount"
-      :pageIndex="pageIndex"
+      :pageIndex.sync="pageIndex"
       :totalPage="totalPage"
+      @loadPrePage="loadPrePage"
+      @loadNextPage="loadNextPage"
+      ref="footer"
     ></FootBtn>
+
+    <MessageBox
+      v-if="visible"
+      :dialogVisible.sync="visible"
+      :currentType="currentType"
+    ></MessageBox>
   </div>
 </template>
 
 <script>
-import headSearch from '@/components/headSearch'
+import Head from '../components/Head'
 import TypeTable from '../components/TypeTable'
 import CreateButton from '../components/CreateButton'
 import FootBtn from '../components/FootBtn'
-import {
-  getGoodsTypeApi,
-  createGoodsTypeApi,
-  changeGoodsTypeApi,
-  delGoodsTypeApi,
-} from '@/api/goods'
+import MessageBox from '../components/MessageBox'
+import { getGoodsTypeApi, delGoodsTypeApi } from '@/api/goods'
 export default {
   data() {
     return {
       formInline: {
-        userCode: '',
+        searchName: '',
         region: '',
       },
       goodsType: [],
       totalCount: '',
-      pageIndex: '',
+      pageIndex: '1',
       totalPage: '',
       currentTypeName: '',
+      visible: false,
     }
   },
   components: {
-    headSearch,
+    Head,
     CreateButton,
     TypeTable,
     FootBtn,
+    MessageBox,
   },
   created() {
     this.getGoodsType()
   },
-
   methods: {
     // 获取数据
     async getGoodsType() {
-      const { data } = await getGoodsTypeApi()
+      const { data } = await getGoodsTypeApi(this.pageIndex)
       this.goodsType = data.currentPageRecords
       this.totalCount = data.totalCount
-      this.pageIndex = data.pageIndex
       this.totalPage = data.totalPage
-      // console.log(data)
     },
-    // 创建新类型
-    async createNewType(val) {
-      try {
-        // 发送新增类型名称 请求
-        await createGoodsTypeApi(val)
-        this.$message.success('添加成功')
-        // 重新加载页面
-        this.getGoodsType()
-        this.$refs.create.visible = false
-      } catch (error) {
-        this.$message.error('请重新输入')
+    // 切换上一页
+    loadPrePage() {
+      this.pageIndex--
+      this.getGoodsType()
+    },
+    // 切换下一页
+    async loadNextPage() {
+      this.pageIndex++
+      this.getGoodsType()
+    },
+    // 查询
+    searchFn(val) {
+      console.log(val.userCode)
+      if (val.userCode.length === 0) {
+        this.$refs.footer.isShow = true
+        return this.getGoodsType()
       }
+      this.goodsType = this.goodsType.filter(
+        (item) => item.className === val.userCode,
+      )
+      // this.$refs.footer.style.display= none
+      this.$refs.footer.isShow = false
     },
     // 修改
     async editType(val) {
-      this.$refs.create.visible = true
-      this.currentTypeName = val.className
-      await changeGoodsTypeApi(val.classId, val.className)
+      this.visible = true
+      this.currentType = val
     },
     // 删除
     async delClassName(val) {
       try {
         await delGoodsTypeApi(val.classId)
-      this.$message.success('删除成功')
-       // 重新加载页面
+        this.$message.success('删除成功')
+        // 重新加载页面
         this.getGoodsType()
-      }catch(error) {
+      } catch (error) {
         this.$message.error('删除失败')
       }
     },

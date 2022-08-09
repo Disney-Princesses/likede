@@ -1,9 +1,13 @@
 <template>
-  <div class="foot" v-if="isFootShow">
+  <div class="foot" v-if="isFootShow" v-show="isShow">
     <p>共{{ totalCount }}条记录，第{{ pageIndex }}/{{ totalPage }}页</p>
     <div>
-      <el-button class="btn" :disabled="first">上一页</el-button>
-      <el-button class="btn" :disabled="last">下一页</el-button>
+      <el-button class="btn" :disabled="first" @click="$emit('loadPrePage')"
+        >上一页</el-button
+      >
+      <el-button class="btn" :disabled="last" @click="$emit('loadNextPage')"
+        >下一页</el-button
+      >
     </div>
   </div>
 </template>
@@ -11,15 +15,30 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      isShow:true
+    }
   },
-  props: ['totalCount', 'pageIndex', 'totalPage'],
+  props: {
+    totalCount: {
+      type: String,
+      required: true,
+    },
+    pageIndex: {
+      type: String,
+      required: true,
+    },
+    totalPage: {
+      type: String,
+      required: true,
+    },
+  },
   computed: {
     isFootShow() {
       return this.pageIndex < this.totalPage
     },
     first() {
-      return this.pageIndex === 1
+      return this.pageIndex <= 1
     },
     last() {
       return this.pageIndex === this.totalPage

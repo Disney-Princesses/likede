@@ -5,19 +5,13 @@
       新建</el-button
     >
     <MessageBox
-      ref="mbox"
-      @onsave="save"
       :dialogVisible.sync="visible"
-     :currentTypeName ='currentTypeName'
     ></MessageBox>
-    <!-- 商品管理模块弹窗 -->
-    <GoodsDialog></GoodsDialog>
   </div>
 </template>
 
 <script>
 import MessageBox from '../MessageBox'
-import GoodsDialog from '../GoodsDialog'
 export default {
   props: {},
   data() {
@@ -25,29 +19,17 @@ export default {
       visible: false,
     }
   },
-  props: {
-    currentTypeName: {
-      type: String,
-      default: '',
-    },
-  },
   components: {
     MessageBox,
-    GoodsDialog
   },
   created() {},
 
-  methods: {
-    save(val) {
-      this.$emit('createNewType', val)
-    },
-  },
+  methods: {},
 }
 </script>
 
 <style scoped lang="scss">
 .appBtn {
-  // margin-bottom: 20px;
   background-color: #fff;
   padding: 20px;
   .el-button {

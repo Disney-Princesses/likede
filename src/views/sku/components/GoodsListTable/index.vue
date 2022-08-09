@@ -20,9 +20,6 @@
     <el-table-column property="price" label="商品价格" />
     <el-table-column property="skuClass.className" label="商品类型" />
     <el-table-column property="updateTime" :formatter="dateFormat" label="创建日期"> 
-      <!-- <template slot-scope="scope">
-        <span>{{moment(scope.row.updateTime).format('YYYY-MM-DD HH-mm-ss')}}</span>
-      </template> -->
     </el-table-column>
     <el-table-column label="操作">
       <slot></slot>

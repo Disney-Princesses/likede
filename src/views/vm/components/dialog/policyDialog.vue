@@ -31,6 +31,7 @@
 <script>
 import operateBtn from '../btn/operateBtn.vue'
 import newDataBtn from '../btn/newDataBtn.vue'
+import { CancellationPolicy } from '@/api'
 
 export default {
   props: {
@@ -55,8 +56,15 @@ export default {
       this.$emit('update:isPolicyDialog', false)
     },
     // 取消策略
-    abolish() {
-      console.log(123)
+    async abolish() {
+      try {
+        await CancellationPolicy(
+          this.dialogData.innerCode,
+          this.dialogData.policyId,
+        )
+        this.$message.success('取消策略成功')
+        this.onClose()
+      } catch (error) {}
     },
   },
   components: {

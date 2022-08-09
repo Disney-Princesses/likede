@@ -241,6 +241,7 @@ export default {
       // console.log(data.file)
       const formData = new FormData()
       formData.append('fileName', data.file)
+      console.log(formData)
       const res = await addImg(formData)
       // console.log(res)
       this.formPeople.image = res.data

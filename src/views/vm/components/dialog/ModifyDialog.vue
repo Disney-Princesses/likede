@@ -77,7 +77,7 @@ export default {
           innerCodeList: innerArr,
           policyId: this.form.vmType,
         })
-        console.log(res)
+        
         // 提示信息
         this.$message.success('添加成功')
         // 获取售货机类型

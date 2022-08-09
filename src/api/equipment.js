@@ -266,3 +266,51 @@ export const removeVmTypeApi = (id) => {
     method: 'DELETE',
   })
 }
+/**
+ *
+ * @param {*} innerCode 售货机编号
+ * @param {*} policyId 策略Id
+ * @returns
+ */
+export const CancellationPolicy = (innerCode, policyId) => {
+  return request({
+    url: `/vm-service/vm/cancelPolicy/${innerCode}/${policyId}`,
+    method: 'PUT',
+  })
+}
+
+/**商品搜索
+ *
+ * @param {*} pageIndex 页数
+ * @returns Promise
+ */
+export const searchService = (pageIndex, skuName) => {
+  return request({
+    url: '/vm-service/sku/search',
+    params: {
+      pageSize: 10,
+      pageIndex,
+      skuName,
+    },
+  })
+}
+/** 货道配置
+ *
+ * @param {*} data
+ * innerCode  售货机编号
+ * channelList :{
+ * channelCode 货道编码(如：1-1,1-2)
+ * skuId :商品Id
+ * }
+ * @returns Promise
+ */
+export const channelConfig = (channelList, innerCode) => {
+  return request({
+    url: '/vm-service/channel/channelConfig',
+    method: 'PUT',
+    data: {
+      channelList,
+      innerCode,
+    },
+  })
+}

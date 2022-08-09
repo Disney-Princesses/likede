@@ -11,3 +11,14 @@ export const TaskOperationApi = (params) => {
     params,
   })
 }
+
+/**
+ * 根据设备编号获取维修人员列表
+ * @param {String} innerCode //设备编号
+ * @returns
+ */
+export const getRepairUserList = (innerCode) => {
+  return request({
+    url: '/user-service/user/repairerList/' + innerCode,
+  })
+}

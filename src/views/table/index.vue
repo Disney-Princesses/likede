@@ -7,7 +7,7 @@
       stateLabel="工单状态"
       :dropDownList="dropDownList"
       :formInline="formInline"
-      @click="submit"
+      @searchClick="submit"
     ></headSearch>
     <!-- 内容部分 -->
     <div class="contentMain">
@@ -24,6 +24,7 @@
             ? WorkOrderDate.currentPageRecords
             : []
         "
+        :taskSearchData="taskSearchData"
       >
         <template v-slot="taskId">
           <el-button
@@ -54,14 +55,24 @@
     <My-dialog
       ref="dialog"
       :dialogVisible.sync="dialogVisible"
-      :id="id"
+      @reCreate="reCreateTask"
+      @reGetTask="reGetTask"
+      :taskSearchData="taskSearchData"
     ></My-dialog>
 
     <!-- 新增工单的对话框 -->
-    <addDialog :visible.sync="addvisible"></addDialog>
+    <addDialog
+      :visible.sync="addvisible"
+      ref="addDialog"
+      :isRepair="taskSearchData.isRepair"
+      @reGetTaskList="reGetTaskList"
+    ></addDialog>
 
     <!-- 工单配置的对话框 -->
-    <ConfigDialog :visible.sync="configvisible"></ConfigDialog>
+    <ConfigDialog
+      :visible.sync="configvisible"
+      @reGetTask="reGetTask"
+    ></ConfigDialog>
   </div>
 </template>
 
@@ -69,7 +80,7 @@
 import headSearch from '@/components/headSearch'
 import newImportButton from '@/components/newImportBtn'
 import tableModule from '@/components/tableModule'
-import { taskSearch } from '@/api'
+import { taskSearch, getAddGoodsApi } from '@/api'
 import MyDialog from './components/dialog.vue'
 import addDialog from './addTask/addTaskDialog.vue'
 import ConfigDialog from './config/taskConfig.vue'
@@ -84,7 +95,7 @@ export default {
       // 下拉数据
       dropDownList: ['待办', '进行', '取消', '完成'],
       // 表单数据
-      WorkOrderDate: [],
+      WorkOrderDate: {},
       taskSearchData: {
         // 当前页码
         pageIndex: 1,
@@ -103,13 +114,14 @@ export default {
       nextDisable: false,
       // 控制对话框显隐
       dialogVisible: false,
-      id: '',
+      // id: '',
       visible: false,
       addvisible: false,
       configvisible: false,
+      reCreateInfo: {},
+      regetUserList: [],
     }
   },
-
   created() {
     // 获取工单数据
     this.taskSearch(this.taskSearchData)
@@ -128,10 +140,31 @@ export default {
             .replace('-', '.')
         })
         this.WorkOrderDate = data
-        console.log(data)
-      } catch (error) {
-        console.log(error)
+        if (data.currentPageRecords.length < 10) {
+          this.nextDisable = true
+        }
+      } catch (error) {}
+    },
+    // 重新获取工单数据
+    reGetTaskList() {
+      this.taskSearchData = {
+        // 当前页码
+        pageIndex: 1,
+        // 设备编号
+        innerCode: '',
+        // 工单所属人ID
+        userId: '',
+        // 工单编号
+        taskCode: '',
+        // 工单状态 1:代办,2:进行,3:取消,4:完成
+        status: '',
+        // 是否是维修工单
+        isRepair: false,
       }
+      this.taskSearch(this.taskSearchData)
+    },
+    reGetTask() {
+      this.reGetTaskList()
     },
     // 点击获取工单详情
     handleClick(id) {
@@ -190,7 +223,26 @@ export default {
     // 点击新建
     addTask() {
       this.addvisible = true
+      this.$refs.addDialog.getTaskStatus()
     },
+    // 重新创建工单
+    async reCreateTask(data1) {
+      // this.reCreateInfo = data1
+
+      // 显示新建对话框
+      this.addTask()
+      // 触发获取运营人员列表的方法
+      await this.$refs.addDialog.getInnerCode(data1.innerCode)
+      // 重新获取补货详情信息
+      const { data } = await getAddGoodsApi(data1.taskId)
+      // console.log(data)
+      this.reCreateInfo = { ...data1, details: data }
+      // console.log(this.reCreateInfo)
+
+      // 数据回显
+      this.$refs.addDialog.reShowInfo(this.reCreateInfo)
+    },
+
     // 点击工单配置
     taskConfig() {
       this.configvisible = true

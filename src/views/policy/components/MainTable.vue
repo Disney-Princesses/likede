@@ -1,0 +1,94 @@
+<template>
+  <el-table
+    ref="singleTable"
+    :data="GoodsListData"
+    highlight-current-row
+    @current-change="handleCurrentChange"
+    style="width: 100%"
+    :header-cell-style="{ background: '#f3f6fb' }"
+    empty-text="暂时没有数据了"
+  >
+    <el-table-column type="index" width="100" label="序号"> </el-table-column>
+    <el-table-column property="policyName" label="商品名称" />
+    <el-table-column property="discount" label="策略方案" />
+    <el-table-column
+      property="createTime"
+      :formatter="dateFormat"
+      label="创建日期"
+    >
+    </el-table-column>
+    <el-table-column label="操作">
+      <slot></slot>
+      <template slot-scope="scope">
+        <el-button
+          type="text"
+          size="medium "
+          @click="$emit('detail', scope.row)"
+          >查看详情</el-button
+        >
+        <el-button
+          type="text"
+          size="medium "
+          @click="$emit('edit', scope.row)"
+          >修改</el-button
+        >
+        <el-button
+          type="text"
+          size="medium "
+          style="color:red"
+          @click="$emit('del', scope.row)"
+          >删除</el-button
+        >
+      </template>
+    </el-table-column>
+  </el-table>
+</template>
+
+<script>
+import moment from 'moment'
+export default {
+  data() {
+    return {
+      currentRow: null,
+      visible: false,
+    }
+  },
+  props: {
+    GoodsListData: {
+      type: Array,
+      required: true,
+    },
+    currentTypeName: {
+      type: String,
+      default: '',
+    },
+  },
+  created() {},
+  methods: {
+    handleCurrentChange(val) {
+      this.currentRow = val
+    },
+    dateFormat(row, column) {
+      let date = row[column.property]
+      return moment(date).format('YYYY-MM-DD HH-mm-ss')
+    },
+  },
+}
+</script>
+
+<style scoped lang="scss">
+::v-deep.el-table--enable-row-transition .el-table__body td {
+  border: 0;
+  // padding: 20px;
+}
+::v-deep.el-table::before {
+  height: 0 !important;
+}
+::v-deep.el-table th.is-leaf {
+  border: 0 !important;
+}
+::v-deep .el-table__row .el-table_1_column_9 .cell {
+  color: #5f84ff;
+  cursor: pointer;
+}
+</style>

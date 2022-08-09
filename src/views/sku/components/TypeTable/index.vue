@@ -9,16 +9,10 @@
     empty-text="暂时没有数据了"
   >
     <el-table-column type="index" width="100" label="序号"> </el-table-column>
-    <el-table-column property="className" label="商品类型名称" width="800">
+    <el-table-column property="className" label="商品类型名称" >
     </el-table-column>
-    <el-table-column label="操作">
+    <el-table-column label="操作" >
       <slot></slot>
-      <!-- <template slot-scope="scope">
-        <el-button @click="handleClick(scope.row)" type="text" size="small"
-          >查看详情</el-button
-        >
-        <el-button type="text" size="small">编辑</el-button>
-      </template> -->
       <template slot-scope="scope">
         <el-button
           type="text"

@@ -22,6 +22,10 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
+// 引入可视化图库
+import * as Echarts from 'echarts'
+Vue.prototype.$Echarts = Echarts
+
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明

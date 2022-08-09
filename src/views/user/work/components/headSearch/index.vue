@@ -3,14 +3,14 @@
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <!-- 搜索输入框 -->
       <el-form-item :label="orderLabel + ':'">
-        <el-input v-model="formInline.userCode" placeholder="请输入"></el-input>
+        <el-input v-model="formInline.userName" placeholder="请输入"></el-input>
       </el-form-item>
       <!-- 下拉选项框，可选择是否显示 -->
       <el-form-item :label="stateLabel + ':'" v-if="dropDown">
-        <el-select v-model="formInline.region" placeholder="请选择" clearable>
+        <el-select v-model="formInline.roleId" placeholder="请选择" clearable>
           <el-option
-            :label="item"
-            :value="item"
+            :label="item.roleName"
+            :value="item.roleId"
             v-for="(item, index) in dropDownList"
             :key="index"
           ></el-option>

@@ -3,7 +3,7 @@
     <head-search
       :formInline="formInline"
       :orderLabel="orderLabel"
-      @click="searchFn"
+      @searchClick="searchFn"
     ></head-search>
     <div class="contentMain">
       <!-- 按钮部分 -->
@@ -15,6 +15,7 @@
       </div>
       <!-- 表单部分 -->
       <Mytable
+        v-loading="loading"
         :WorkOrderDate="
           sellData.currentPageRecords ? sellData.currentPageRecords : []
         "
@@ -68,7 +69,11 @@
         @updata="getServiceData"
       />
       <!-- 货道 -->
-      <aisle-dialog :isAisleDialog.sync="isAisleDialog"></aisle-dialog>
+      <aisle-dialog
+        v-if="isAisleDialog"
+        :isAisleDialog.sync="isAisleDialog"
+        :dialogData="dialogData || {}"
+      ></aisle-dialog>
     </div>
   </div>
 </template>
@@ -122,6 +127,7 @@ export default {
       PolicyData: [],
       // 弹框所需数据
       dialogData: {},
+      loading: false,
     }
   },
 
@@ -134,6 +140,7 @@ export default {
     handleClick() {},
     // 获取设备数据
     async getServiceData() {
+      this.loading = true
       const res = await getServiceData(this.taskSearchData)
       res.data.currentPageRecords.forEach((item) => {
         item.vmStatus ? (item.vmStatus = '运营') : (item.vmStatus = '未投放')
@@ -145,11 +152,13 @@ export default {
       })
       this.sellData = res.data
       this.pageIndex = res.data.pageIndex
+      this.loading = false
     },
     // 点击货道
     aisleClick(e) {
-      console.log(e)
       this.isAisleDialog = true
+      this.dialogData = e
+      console.log(this.isAisleDialog)
     },
     // 点击策略
     async policyClick(e) {

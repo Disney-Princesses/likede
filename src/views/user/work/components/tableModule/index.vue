@@ -15,7 +15,7 @@
       :label="userTitleList[index]"
       v-for="(item, index) in userKeyList"
       :key="index"
-      width="200"
+      width="180"
     >
     </el-table-column>
 
@@ -42,6 +42,7 @@ export default {
       type: Array,
       required: true,
     },
+    // 员工工作列表
     userDate: {
       type: Array,
       required: true,

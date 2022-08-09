@@ -110,7 +110,7 @@ export const constantRoutes = [
         path: 'type',
         component: () => import('@/views/vm/type/index'),
         name: 'type',
-        meta: { title: '设置类型管理' },
+        meta: { title: '设备类型管理' },
       },
     ],
   },

@@ -16,6 +16,8 @@ import '@/icons' // icon
 import '@/permission' // permission control
 
 import * as directive from './directive'
+import * as Echarts from 'echarts'
+Vue.prototype.$Echarts = Echarts
 // 假数据
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')

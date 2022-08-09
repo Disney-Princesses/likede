@@ -21,6 +21,9 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <slot></slot>
+      </el-form-item>
+      <el-form-item>
         <!-- 搜索按钮 -->
         <el-button
           type="primary"

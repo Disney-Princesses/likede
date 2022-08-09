@@ -7,7 +7,7 @@
   >
     <el-form ref="form" :model="form" :rules="inputRule" label-width="120px">
       <el-form-item label="商品类型名称:" prop="className">
-        <el-input v-model="form.className" placeholder="请输入"></el-input>
+        <el-input v-model.trim="form.className" placeholder="请输入"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { changeGoodsTypeApi,createGoodsTypeApi } from '@/api/goods'
+import { changeGoodsTypeApi, createGoodsTypeApi } from '@/api/goods'
 export default {
   data() {
     return {
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     titleName() {
-      return this.currentType ? '添加商品类型' : '编辑商品类型'
+      return this.currentType? '编辑商品类型' : '添加商品类型'
     },
   },
   props: {
@@ -57,25 +57,30 @@ export default {
       this.form.className = this.currentType.className
     },
     async clickFn() {
-      if (this.currentTypeName) {
+      if (this.form.className.length === 0) {
+        return this.$message('请输入商品类型名称')
+      }
+      if (this.currentType) {
         // 编辑
         this.$refs.form.validate()
+        this.currentType.className=this.form.className
         await changeGoodsTypeApi(
           this.currentType.classId,
           this.currentType.className,
         )
-        this.$parent.getGoodsType()
         this.$message.success('修改成功')
         this.$emit('update:dialogVisible', false)
-        this.$parent.getGoodsType()
+        this.$parent.$options.parent.getGoodsType()
       } else {
         // 新增
         this.$refs.form.validate()
         await createGoodsTypeApi(this.form.className)
         this.$message.success('添加成功')
         this.$emit('update:dialogVisible', false)
+        this.form.className = ''
         // 重新加载页面
-        this.$parent.getGoodsType()
+        // console.log(this.$parent.$options.parent);
+        this.$parent.$options.parent.getGoodsType()
       }
     },
   },

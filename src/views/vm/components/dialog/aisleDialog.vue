@@ -67,8 +67,14 @@
                       </div>
                     </div>
                     <div class="btn">
-                      <a href="javascript:;">添加</a>
-                      <a href="javascript:;">删除</a>
+                      <button @click="addGood(item)">添加</button>
+                      <button
+                        href="javascript:;"
+                        @click="removeGood(item)"
+                        :class="{ banclickBtn: !item.sku }"
+                      >
+                        删除
+                      </button>
                     </div>
                   </div>
                 </el-col>
@@ -96,8 +102,14 @@
                       </div>
                     </div>
                     <div class="btn">
-                      <a href="javascript:;">添加</a>
-                      <a href="javascript:;">删除</a>
+                      <button @click="addGood(item)">添加</button>
+                      <button
+                        href="javascript:;"
+                        @click="removeGood(item)"
+                        :class="{ banclickBtn: !item.sku }"
+                      >
+                        删除
+                      </button>
                     </div>
                   </div>
                 </el-col>
@@ -128,14 +140,22 @@
       :childvisible.sync="childvisible"
       :dialogData="dialogData"
     ></nominate-dialog>
+    <!-- 添加 -->
+    <newAisleDialog
+      v-if="isnewAisleDialog"
+      :isnewAisleDialog.sync="isnewAisleDialog"
+      :dialogData="dialogData"
+      @changeGoods="changeGoods"
+    ></newAisleDialog>
   </div>
 </template>
 
 <script>
-import { getChannelInfo, getVmTypeInfo } from '@/api'
+import { channelConfig, getChannelInfo, getVmTypeInfo } from '@/api'
 import newDataBtn from '../btn/newDataBtn.vue'
 import imgDefault from '@/assets/image/goods.png'
 import nominateDialog from './nominateDialog.vue'
+import newAisleDialog from './newAisleDialog.vue'
 export default {
   props: {
     isAisleDialog: {
@@ -156,12 +176,19 @@ export default {
       firstPageList: [],
       // 展示第二页数据
       nextPageList: [],
+      // 总数据
+      pageList: [],
       loading: false,
       imgDefault,
       // 点击切换
       flag: false,
       // 控制智能排货弹框
       childvisible: false,
+      // 控制添加功能弹框
+      isnewAisleDialog: false,
+      disabled: false,
+      // 点击添加的数据
+      GoodsInfo: {},
     }
   },
 
@@ -176,10 +203,43 @@ export default {
     onClose() {
       this.$emit('update:isAisleDialog', false)
     },
-    submit() {
+    async submit() {
       console.log(12345)
+      const channelList = []
+      this.pageList.forEach((item) => {
+        item = {
+          channelCode: item.channelCode,
+          skuId: (item.sku && item.sku.skuId) || 0,
+        }
+        channelList.push(item)
+      })
+      await channelConfig(channelList, this.dialogData.innerCode)
+      this.$message.success('修改成功')
+      this.onClose()
     },
-    filterNode() {},
+    // 点击删除
+    removeGood(data) {
+      console.log(data)
+      this.firstPageList.forEach((item) => {
+        if (item.channelId === data.channelId) {
+          item.sku = null
+        }
+      })
+      this.nextPageList.forEach((item) => {
+        if (item.channelId === data.channelId) {
+          item.sku = null
+          console.log(item.sku)
+        }
+      })
+      // 拿到最终数据
+      this.pageList = [...this.firstPageList, ...this.nextPageList]
+      console.log(this.pageList)
+    },
+    // 点击添加
+    addGood(data) {
+      this.isnewAisleDialog = true
+      this.GoodsInfo = data
+    },
     // 上一页
     pageFn() {
       if (this.flag) {
@@ -205,24 +265,32 @@ export default {
       this.loading = true
       const innerCode = this.dialogData.innerCode
       const { data } = await getChannelInfo(innerCode)
-      console.log(data)
+      this.pageList = data
+      console.log(this.pageList)
       let arr = []
       let newArr = []
-      for (let i = 0; i < data.length / 5; i++) {
+      for (let i = 0; i < this.pageList.length / 5; i++) {
         if (i % 2 === 0) {
-          arr.push(...data.slice(i * 5, (i + 1) * 5))
+          arr.push(...this.pageList.slice(i * 5, (i + 1) * 5))
         } else {
-          newArr.push(...data.slice(i * 5, (i + 1) * 5))
+          newArr.push(...this.pageList.slice(i * 5, (i + 1) * 5))
         }
       }
       this.firstPageList = arr
       this.nextPageList = newArr
       this.loading = false
     },
+    // 添加提交
+    changeGoods(item) {
+      this.GoodsInfo.sku = item
+      console.log(this.GoodsInfo)
+      console.log(item)
+    },
   },
   components: {
     newDataBtn,
     nominateDialog,
+    newAisleDialog,
   },
 }
 </script>
@@ -336,7 +404,10 @@ export default {
 .nextChangeBtn {
   right: 50px;
 }
-
+.banclickBtn {
+  color: #ffdada !important;
+  cursor: not-allowed !important;
+}
 // 商品部分
 .goodsModule {
   flex-wrap: wrap;
@@ -387,10 +458,20 @@ export default {
         background-color: #fff;
         display: flex;
         justify-content: space-evenly;
-        a:nth-child(1) {
+        button {
+          border: 0;
+          padding: 20px 1px;
+          background: #fff;
+          &:hover {
+            cursor: pointer;
+            color: unset;
+            background-color: unset;
+          }
+        }
+        button:nth-child(1) {
           color: #5f84ff;
         }
-        a:nth-child(2) {
+        button:nth-child(2) {
           color: #ff5a5a;
         }
       }

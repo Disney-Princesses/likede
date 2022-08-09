@@ -35,7 +35,11 @@ export default {
   },
   computed: {
     isFootShow() {
-      return this.pageIndex < this.totalPage
+      if (this.pageIndex == 1 && this.pageIndex === this.totalPage) {
+        return false
+      } else {
+        return this.pageIndex <= this.totalPage
+      }
     },
     first() {
       return this.pageIndex <= 1

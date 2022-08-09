@@ -9,7 +9,7 @@
     empty-text="暂时没有数据了"
   >
     <el-table-column type="index" width="100" label="序号"> </el-table-column>
-    <el-table-column property="className" label="商品类型名称" width="1000">
+    <el-table-column property="className" label="商品类型名称" >
     </el-table-column>
     <el-table-column label="操作" >
       <slot></slot>

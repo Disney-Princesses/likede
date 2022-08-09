@@ -28,7 +28,7 @@ export const constantRoutes = [
         path: 'home',
         name: 'home',
         component: () => import('@/views/home/index'),
-        meta: { title: '帝可得', icon: 'el-icon-s-home' },
+        meta: { title: '帝可得', icon: 'home' },
       },
     ],
   },
@@ -38,7 +38,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: '工单管理', icon: 'el-icon-tickets' },
+    meta: { title: '工单管理', icon: 'workorder' },
     children: [
       {
         path: 'table',
@@ -61,7 +61,7 @@ export const constantRoutes = [
     redirect: '/node/region',
     meta: {
       title: '点位管理',
-      icon: 'el-icon-map-location',
+      icon: 'point',
     },
     children: [
       {
@@ -91,7 +91,7 @@ export const constantRoutes = [
     name: 'vm',
     meta: {
       title: '设备管理',
-      icon: 'el-icon-lollipop',
+      icon: 'equipment',
     },
     children: [
       {
@@ -121,7 +121,7 @@ export const constantRoutes = [
     name: 'user',
     meta: {
       title: '人员管理',
-      icon: 'el-icon-user',
+      icon: 'staff',
     },
     children: [
       {
@@ -150,7 +150,7 @@ export const constantRoutes = [
     redirect: '/sku/sku-class',
     meta: {
       title: '商品管理',
-      icon: 'el-icon-goods',
+      icon: 'goods',
     },
     children: [
       {
@@ -176,7 +176,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'indexPO',
         component: () => import('@/views/policy/index'),
-        meta: { title: '策略管理', icon: 'el-icon-table-lamp' },
+        meta: { title: '策略管理', icon: 'strategy' },
       },
     ],
   },
@@ -189,7 +189,7 @@ export const constantRoutes = [
         path: 'order',
         name: 'order',
         component: () => import('@/views/order/index'),
-        meta: { title: '订单管理', icon: 'el-icon-collection' },
+        meta: { title: '订单管理', icon: 'order' },
       },
     ],
   },
@@ -201,7 +201,7 @@ export const constantRoutes = [
         path: 'report',
         name: 'report',
         component: () => import('@/views/report/index'),
-        meta: { title: '对账管理', icon: 'el-icon-data-analysis' },
+        meta: { title: '对账管理', icon: 'accountcheck' },
       },
     ],
   },

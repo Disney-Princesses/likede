@@ -1,49 +1,66 @@
 <template>
   <div class="app-container">
     <!-- 头部 -->
-    <headSearch  orderLabel="商品搜索" :formInline="formInline"></headSearch>
-     <!-- 新建按钮 -->
-    <CreateButton
-      ref="create"
-    ></CreateButton>
+    <Head
+      orderLabel="商品搜索"
+      :formInline="formInline"
+      @click="searchFn"
+    ></Head>
+    <!-- 新建按钮 -->
+    <GoodsPageBtn ref="create" :currentGood="currentGood"></GoodsPageBtn>
     <!-- 表格 -->
     <GoodsListTable
       :GoodsListData="goodsList"
+      @editType="editGood"
     ></GoodsListTable>
     <!-- 底部 -->
     <FootBtn
       :totalCount="totalCount"
       :pageIndex="pageIndex"
       :totalPage="totalPage"
+      @loadPrePage="loadPrePage"
+      @loadNextPage="loadNextPage"
+      ref="foot"
     ></FootBtn>
+
+    <GoodsDialog
+      ref="dialog"
+      v-if="visible"
+      :dialogVisible.sync="visible"
+      :currentGood="currentGood"
+    ></GoodsDialog>
   </div>
 </template>
 
 <script>
-import headSearch from '@/components/headSearch'
+import Head from '../components/Head'
 import GoodsListTable from '../components/GoodsListTable'
-import CreateButton from '../components/CreateButton'
+import GoodsPageBtn from '../components/GoodsPageBtn'
 import FootBtn from '../components/FootBtn'
-import {getGoodsList} from '@/api/goods'
+import { getGoodsList } from '@/api/goods'
+import GoodsDialog from '../components/GoodsDialog'
 export default {
   data() {
     return {
       formInline: {
-        userCode: '',
+        searchName: '',
         region: '',
       },
-      goodsList:[],
+      goodsList: [],
       totalCount: '',
-      pageIndex: '',
+      pageIndex: '1',
       totalPage: '',
-    };
+      currentGood: {},
+      visible: false,
+    }
   },
-components:{
-  headSearch,
-    CreateButton,
+  components: {
+    Head,
+    GoodsPageBtn,
     GoodsListTable,
     FootBtn,
-},
+    GoodsDialog,
+  },
   created() {
     this.getGoodsList()
   },
@@ -51,15 +68,41 @@ components:{
   methods: {
     // 获取商品数据
     async getGoodsList() {
-      const {data} = await getGoodsList()
+      console.log(typeof this.pageIndex)
+      const { data } = await getGoodsList(this.pageIndex)
       this.goodsList = data.currentPageRecords
-      console.log(this.goodsList);
       this.totalCount = data.totalCount
-      this.pageIndex = data.pageIndex
       this.totalPage = data.totalPage
-    }
+    },
+    // 切换上一页
+    loadPrePage() {
+      console.log(this.pageIndex--)
+      this.getGoodsList()
+    },
+    // 切换下一页
+    loadNextPage() {
+      console.log(this.pageIndex++)
+      this.getGoodsList()
+    },
+    // 查询
+    searchFn(val) {
+      console.log(val.userCode)
+      if (val.userCode.length === 0) {
+        this.$refs.foot.isShow = true
+        return this.getGoodsList()
+      }
+      this.goodsList = this.goodsList.filter(
+        (item) => item.skuName === val.userCode,
+      )
+      this.$refs.foot.isShow = false
+    },
+    // 修改
+    async editGood(val) {
+      this.visible = true
+      this.currentGood = val
+    },
   },
-};
+}
 </script>
 
 <style scoped lang="less"></style>

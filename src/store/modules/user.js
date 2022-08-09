@@ -7,6 +7,7 @@ export default {
     userInfo: {},
     // 请求验证码的token
     clientToken: Math.ceil(Math.random() * 10) * 1024,
+    goodsType: [],
   },
   mutations: {
     // 保存请求验证码的token
@@ -16,6 +17,9 @@ export default {
     // 保存用户信息
     setUserToken(state, payload) {
       state.userInfo = payload
+    },
+    setGoodsType(state, payload) {
+      state.goodsType = payload
     },
   },
   actions: {
@@ -43,6 +47,10 @@ export default {
         ...context.state.userInfo,
         ...data.data,
       })
+    },
+    // 商品类型数据
+    getGoodsType(context,payload) {
+      context.commit('setGoodsType',payload)
     },
   },
 }

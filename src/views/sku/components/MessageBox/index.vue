@@ -18,16 +18,9 @@
 </template>
 
 <script>
+import { changeGoodsTypeApi,createGoodsTypeApi } from '@/api/goods'
 export default {
   data() {
-    const titleName = async (rule, value, callback) => {
-      if (this.currentTypeName === '') {
-        //  添加
-      } else {
-        // 编辑
-        this.form.className = this.currentTypeName
-      }
-    }
     return {
       form: {
         className: '',
@@ -41,7 +34,7 @@ export default {
   },
   computed: {
     titleName() {
-      return this.currentTypeName === '' ? '添加商品类型' : '编辑商品类型'
+      return this.currentType ? '添加商品类型' : '编辑商品类型'
     },
   },
   props: {
@@ -49,18 +42,41 @@ export default {
       type: Boolean,
       default: false,
     },
-    currentTypeName: {
+    currentType: {
       type: String,
       default: '',
     },
   },
   created() {
-    console.log(this.currentTypeName)
+    this.editFn()
   },
   methods: {
-    clickFn() {
-      this.$refs.form.validate()
-      this.$emit('onsave', this.form.className)
+    // 点击编辑时
+    editFn() {
+      console.log(this.currentType)
+      this.form.className = this.currentType.className
+    },
+    async clickFn() {
+      if (this.currentTypeName) {
+        // 编辑
+        this.$refs.form.validate()
+        await changeGoodsTypeApi(
+          this.currentType.classId,
+          this.currentType.className,
+        )
+        this.$parent.getGoodsType()
+        this.$message.success('修改成功')
+        this.$emit('update:dialogVisible', false)
+        this.$parent.getGoodsType()
+      } else {
+        // 新增
+        this.$refs.form.validate()
+        await createGoodsTypeApi(this.form.className)
+        this.$message.success('添加成功')
+        this.$emit('update:dialogVisible', false)
+        // 重新加载页面
+        this.$parent.getGoodsType()
+      }
     },
   },
 }

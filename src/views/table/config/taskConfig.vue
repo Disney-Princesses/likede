@@ -10,31 +10,27 @@
         <el-input-number
           v-model="ruleForm.supply"
           controls-position="right"
-          @change="handleChange"
           :min="1"
           :max="100"
         ></el-input-number>
       </el-form-item>
       <el-form-item class="btn-part">
-        <el-button @click="submitForm('ruleForm')" class="concel-btn"
-          >取消</el-button
-        >
-        <el-button @click="resetForm('ruleForm')" class="onfirm-btn"
-          >确认</el-button
-        >
+        <el-button @click="onConcel" class="concel-btn">取消</el-button>
+        <el-button @click="onFirm" class="onfirm-btn">确认</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
 </template>
 
 <script>
+import { setAutoSupply } from '@/api'
 export default {
   data() {
     return {
       ruleForm: {
         supply: '',
       },
-      rules: [],
+      rules: { name: [] },
     }
   },
   props: {
@@ -46,10 +42,20 @@ export default {
   created() {},
 
   methods: {
+    onConcel() {
+      this.$emit('update:visible', false)
+      this.ruleForm.supply = ''
+    },
     onClose() {
       this.$emit('update:visible', false)
+      this.ruleForm.supply = ''
     },
-    handleChange() {},
+    // 点击确认
+    async onFirm() {
+      await setAutoSupply(this.ruleForm.supply)
+      this.onClose()
+      this.$emit("reGetTask")
+    },
   },
 }
 </script>

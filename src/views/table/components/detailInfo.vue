@@ -4,16 +4,29 @@
       <!-- 状态显示图片 -->
       <div class="taskStatus">
         <i class="el-icon-warning" v-if="detailInfo.taskStatus === '取消'"></i>
-        <i class="el-icon-success" v-if="detailInfo.taskStatus === '完成'"></i>
+        <i class="el-icon-bank-card" v-if="detailInfo.status === '未支付'"></i>
+        <i
+          class="el-icon-success"
+          v-if="
+            detailInfo.taskStatus === '完成' || detailInfo.status === '出货成功'
+          "
+        ></i>
         <i class="el-icon-question" v-if="detailInfo.taskStatus === '待办'"></i>
-        <span>{{ detailInfo.taskStatus }}</span>
+        <span>{{ detailInfo.taskStatus || detailInfo.status }}</span>
         <img
           v-if="detailInfo.taskStatus === '取消'"
           src="http://likede2-admin.itheima.net/img/pic_3.e8208e34.png"
           alt=""
         />
         <img
-          v-if="detailInfo.taskStatus === '完成'"
+          v-if="detailInfo.status === '未支付'"
+          src="http://likede2-admin.itheima.net/img/pic_0.979e683d.png"
+          alt=""
+        />
+        <img
+          v-if="
+            detailInfo.taskStatus === '完成' || detailInfo.status === '出货成功'
+          "
           src="http://likede2-admin.itheima.net/img/pic_4.3b5af41c.png"
           alt=""
         />
@@ -24,6 +37,27 @@
         />
       </div>
       <el-row>
+        <el-col :span="12" v-if="detailInfo.orderNo" class="OrderNo">
+          <div class="grid-content">
+            <el-form-item label="订单编号:">
+              {{ detailInfo.orderNo }}
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="12" v-if="detailInfo.orderNo">
+          <div class="grid-content">
+            <el-form-item label="商品名称:">
+              {{ detailInfo.skuName }}
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="12" v-if="detailInfo.orderNo">
+          <div class="grid-content">
+            <el-form-item label="订单金额:">
+              {{ detailInfo.amount }}
+            </el-form-item>
+          </div>
+        </el-col>
         <el-col :span="12">
           <div class="grid-content">
             <el-form-item label="设备编号:">
@@ -31,6 +65,7 @@
             </el-form-item>
           </div>
         </el-col>
+
         <el-col :span="12">
           <div class="grid-content">
             <el-form-item label="创建日期:">
@@ -45,21 +80,31 @@
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" v-if="detailInfo.orderNo">
           <div class="grid-content">
-            <el-form-item label="运营人员:">
+            <el-form-item label="支付方式:">
+              {{ detailInfo.payType === 1 ? '支付宝支付' : '微信支付' }}
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="12" v-if="!detailInfo.orderNo">
+          <div class="grid-content">
+            <el-form-item label="运营人员:" v-if="!isRepair">
+              {{ detailInfo.userName }}
+            </el-form-item>
+            <el-form-item label="运维人员:" v-if="isRepair">
               {{ detailInfo.userName }}
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" v-if="!detailInfo.orderNo">
           <div class="grid-content">
             <el-form-item label="工单类型:">
               {{ detailInfo.taskType && detailInfo.taskType['typeName'] }}
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" v-if="!isRepair && !detailInfo.orderNo">
           <div class="grid-content">
             <el-form-item label="补货数量:">
               <span
@@ -71,10 +116,17 @@
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" v-if="!detailInfo.orderNo">
           <div class="grid-content">
             <el-form-item label="工单方式:">
               {{ detailInfo.createType }}
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="12" v-if="detailInfo.orderNo">
+          <div class="grid-content">
+            <el-form-item label="设备地址:">
+              {{ detailInfo.addr }}
             </el-form-item>
           </div>
         </el-col>
@@ -84,12 +136,27 @@
               label="取消原因:"
               v-if="detailInfo.taskStatus === '取消'"
             >
-            </el-form-item>
-            <el-form-item label="备注:" v-if="detailInfo.taskStatus === '完成'">
-              自动补货工单
-            </el-form-item>
-            <el-form-item label="备注:" v-if="detailInfo.taskStatus === '待办'">
               {{ detailInfo.desc }}
+            </el-form-item>
+            <el-form-item
+              label="备注:"
+              v-if="
+                detailInfo.taskStatus === '完成' ||
+                detailInfo.taskStatus === '待办'
+              "
+            >
+              {{ detailInfo.desc }}
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col
+          :span="12"
+          v-if="isRepair && detailInfo.taskStatus === '完成'"
+          class="address"
+        >
+          <div class="grid-content">
+            <el-form-item label="定位:">
+              <span> {{ detailInfo.addr }}</span>
             </el-form-item>
           </div>
         </el-col>
@@ -112,6 +179,9 @@ export default {
     detailInfo: {
       type: Object,
       required: true,
+    },
+    isRepair: {
+      type: Boolean,
     },
   },
   components: {
@@ -165,6 +235,18 @@ export default {
   img {
     margin-right: 76px;
     margin-bottom: 7px;
+  }
+}
+.address {
+  ::v-deep .el-form-item__content {
+    line-height: 20px;
+    margin-left: 108px !important;
+    margin-top: 10px;
+  }
+}
+.OrderNo {
+  ::v-deep .el-form-item__content {
+    width: 105%;
   }
 }
 </style>

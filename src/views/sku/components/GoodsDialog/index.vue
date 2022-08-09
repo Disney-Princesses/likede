@@ -139,13 +139,13 @@ export default {
   },
   created() {
     this.getGoodsType()
-    this.addOrEdit()
+    this.toEdit()
   },
+
   methods: {
     // 获取数据类型
     async getGoodsType() {
       const res = await getGoodsTypeApi()
-      // console.log(res)
       this.goodsTypeList = res.data.currentPageRecords
     },
     // 图片选择后 保存在 diaLogForm.imgBroadcastList 对象中
@@ -168,8 +168,10 @@ export default {
     change(val) {
       this.form.classId = val.classId
     },
-    addOrEdit() {
+    // 点击修改以后,弹窗刚打开,数据就渲染上去
+    toEdit() {
       if (this.currentGood.skuId) {
+        // 赋值
         this.form.skuName = this.currentGood.skuName
         this.form.skuImage = this.currentGood.skuImage
         this.form.price = this.currentGood.price
@@ -181,22 +183,20 @@ export default {
     },
     // 新建商品数据 提交 编辑
     async clickFn() {
+      this.$refs.form.validate()
       if (this.currentGood.skuId) {
         // 编辑
-        this.$refs.form.validate()
         await editGoodApi(this.currentGood.skuId, this.form)
         this.$message.success('修改成功')
-        this.$emit('update:dialogVisible', false)
-        this.$parent.getGoodsList()
       } else {
         // 添加
-        this.$refs.form.validate()
         // 发送请求
         await addNewGood(this.form)
         this.$message.success('添加成功')
-        this.$emit('update:dialogVisible', false)
-        this.$parent.getGoodsList()
+        this.$refs.form.resetFields()
       }
+      this.$emit('update:dialogVisible', false)
+      this.$parent.$options.parent.getGoodsList()
     },
   },
 }

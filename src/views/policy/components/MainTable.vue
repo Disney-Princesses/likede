@@ -1,7 +1,7 @@
 <template>
   <el-table
     ref="singleTable"
-    :data="WorkOrderDate"
+    :data="GoodsListData"
     highlight-current-row
     @current-change="handleCurrentChange"
     style="width: 100%"
@@ -9,18 +9,34 @@
     empty-text="暂时没有数据了"
   >
     <el-table-column type="index" width="100" label="序号"> </el-table-column>
-    <el-table-column property="className" label="商品类型名称" width="1000">
+    <el-table-column property="policyName" label="商品名称" />
+    <el-table-column property="discount" label="策略方案" />
+    <el-table-column
+      property="createTime"
+      :formatter="dateFormat"
+      label="创建日期"
+    >
     </el-table-column>
-    <el-table-column label="操作" >
+    <el-table-column label="操作">
       <slot></slot>
       <template slot-scope="scope">
         <el-button
           type="text"
           size="medium "
-          @click="$emit('editType', scope.row)"
+          @click="$emit('detail', scope.row)"
+          >查看详情</el-button
+        >
+        <el-button
+          type="text"
+          size="medium "
+          @click="$emit('edit', scope.row)"
           >修改</el-button
         >
-        <el-button type="text" size="medium " @click="$emit('del',scope.row)"
+        <el-button
+          type="text"
+          size="medium "
+          style="color:red"
+          @click="$emit('del', scope.row)"
           >删除</el-button
         >
       </template>
@@ -29,7 +45,7 @@
 </template>
 
 <script>
-
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -38,7 +54,7 @@ export default {
     }
   },
   props: {
-    WorkOrderDate: {
+    GoodsListData: {
       type: Array,
       required: true,
     },
@@ -51,6 +67,10 @@ export default {
   methods: {
     handleCurrentChange(val) {
       this.currentRow = val
+    },
+    dateFormat(row, column) {
+      let date = row[column.property]
+      return moment(date).format('YYYY-MM-DD HH-mm-ss')
     },
   },
 }

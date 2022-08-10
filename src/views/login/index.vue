@@ -60,7 +60,7 @@
               @click="changeCode"
             />
           </template>
-         <i slot="prefix" class="svg-container svg-check">
+          <i slot="prefix" class="svg-container svg-check">
             <svg-icon iconClass="check"></svg-icon>
           </i>
         </el-input>
@@ -84,9 +84,9 @@ export default {
       // 登录信息
       loginForm: {
         // 用户名
-        loginName: 'admin',
+        loginName: '',
         // 密码
-        password: 'admin',
+        password: '',
         // 验证码
         code: '',
         // 类型 0:后台，1: 运营运维端，2: 合作商后台

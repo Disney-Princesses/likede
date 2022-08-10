@@ -18,7 +18,10 @@
           placeholder="请输入账号"
           type="text"
         >
-          <i slot="prefix" class="el-input__icon el-icon-mobile-phone" />
+          <!-- <i slot="prefix" class="el-input__icon el-icon-mobile-phone" /> -->
+          <i slot="prefix" class="svg-container">
+            <svg-icon iconClass="phone"></svg-icon>
+          </i>
         </el-input>
       </el-form-item>
       <!-- 密码 -->
@@ -37,7 +40,9 @@
               />
             </span>
           </template>
-          <i slot="prefix" class="el-input__icon el-icon-lock" />
+          <i slot="prefix" class="svg-container">
+            <svg-icon iconClass="lock"></svg-icon>
+          </i>
         </el-input>
       </el-form-item>
       <!-- 验证码 -->
@@ -48,7 +53,6 @@
           placeholder="请输入验证码"
           @keyup.enter.native="submitFn"
         >
-          <i slot="prefix" class="el-input__icon el-icon-postcard" />
           <template #append>
             <img
               :src="$store.state.user.clientPic"
@@ -56,6 +60,9 @@
               @click="changeCode"
             />
           </template>
+         <i slot="prefix" class="svg-container svg-check">
+            <svg-icon iconClass="check"></svg-icon>
+          </i>
         </el-input>
       </el-form-item>
       <!-- 登录 -->
@@ -236,5 +243,17 @@ export default {
       background-image: linear-gradient(262deg, #2e50e1, #6878f0);
     }
   }
+}
+.svg-container {
+  padding: 0px 12px 26px 5px;
+  color: #8b99a3;
+  vertical-align: middle;
+  width: 30px;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+}
+.svg-check {
+  padding: 19px 12px 25px 5px;
 }
 </style>

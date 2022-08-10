@@ -50,6 +50,7 @@
         </template>
       </MyTable>
       <MyPagination
+        v-if="totalPage !== '1'"
         :totalCount="totalCount"
         :totalPage="totalPage"
         :pageIndex="pageIndex"

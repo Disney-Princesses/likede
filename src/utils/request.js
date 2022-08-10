@@ -56,8 +56,12 @@ service.interceptors.response.use(
       // 页面跳转
       router.push('/login')
     } else {
-      // 错误提示
-      Message.error(error.message)
+      if (error?.response?.status === 500) {
+        Message.error(error.response.data)
+      } else {
+        // 错误提示
+        Message.error(error.message)
+      }
     }
 
     return Promise.reject(error)

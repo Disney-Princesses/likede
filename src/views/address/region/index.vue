@@ -28,11 +28,14 @@
           <MySpan color="#5f84ff" @click.native="detail(scoped)"
             >查看详情</MySpan
           >
-          <MySpan color="#5f84ff" class="edit-btn" @click.native="edit(scoped)">修改</MySpan>
+          <MySpan color="#5f84ff" class="edit-btn" @click.native="edit(scoped)"
+            >修改</MySpan
+          >
           <MySpan color="#fe5a7e" @click.native="delArea(scoped)">删除</MySpan>
         </template>
       </MyTable>
       <MyPagination
+        v-if="totalPage !== '1'"
         :totalCount="totalCount"
         :totalPage="totalPage"
         :pageIndex="pageIndex"
@@ -41,8 +44,15 @@
         @prev="prevPage"
       ></MyPagination>
     </el-card>
-    <MyAddDialog ref="add_edit" @getRefresh="changePage" :dialogVisible.sync="dialogVisible"></MyAddDialog>
-    <DetailTable ref="detaiDialog" :areaDetailVisible.sync="areaDetailVisible"></DetailTable>
+    <MyAddDialog
+      ref="add_edit"
+      @getRefresh="changePage"
+      :dialogVisible.sync="dialogVisible"
+    ></MyAddDialog>
+    <DetailTable
+      ref="detaiDialog"
+      :areaDetailVisible.sync="areaDetailVisible"
+    ></DetailTable>
   </div>
 </template>
 
@@ -78,7 +88,7 @@ export default {
     MySpan,
     MyPagination,
     MyAddDialog,
-    DetailTable
+    DetailTable,
   },
   created() {
     // 获取区域列表数据
@@ -112,36 +122,38 @@ export default {
       this.areaDetailVisible = true
       // console.log(val.data)
       this.$refs.detaiDialog.areaName = val.data.name
-      const {data} = await pointSearch({regionId:val.data.id})
+      const { data } = await pointSearch({ regionId: val.data.id })
       // console.log(data);
       this.$refs.detaiDialog.areaNodeList = data.currentPageRecords
       this.$refs.detaiDialog.loading = false
     },
     // 修改
-    edit(val){
+    edit(val) {
       this.dialogVisible = true
       this.$refs.add_edit.detail = val.data
     },
     // 删除区域
     delArea(val) {
       this.$confirm('此操作将永久删除该区域, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(async () => {
-          console.log(val.data.id);
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(async () => {
+          console.log(val.data.id)
           await delAreaApi(val.data.id)
           this.changePage()
           this.$message({
             type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
+            message: '删除成功!',
+          })
+        })
+        .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
-          });          
-        });
+            message: '已取消删除',
+          })
+        })
     },
     // 下一页
     nextPage() {
@@ -186,7 +198,7 @@ export default {
       this.totalPage = data.totalPage
     },
     // 新增区域弹出层
-    addArea(){
+    addArea() {
       this.dialogVisible = true
     },
   },

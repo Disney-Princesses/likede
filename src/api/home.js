@@ -77,3 +77,40 @@ export const getSalesCollect = (start, end) => {
     url: `/order-service/report/regionCollect/${start}/${end}`,
   })
 }
+/**合作商点位汇总统计
+ *
+ * @returns Promise
+ */
+export const getNodeCollect = () => {
+  return request({
+    url: '/vm-service/node/nodeCollect',
+  })
+}
+/**获取点位总数
+ *
+ * @returns Promise
+ */
+export const getNodeCount = () => {
+  return request({
+    url: '/vm-service/node/count',
+  })
+}
+
+/**获取点位总数
+ *
+ * @returns Promise
+ */
+export const getPartnerCount = () => {
+  return request({
+    url: '/user-service/partner/count',
+  })
+}
+/**获取10个故障设备列表
+ *
+ * @returns Promise
+ */
+export const getAbnormalTop = () => {
+  return request({
+    url: '/status-service/status/top10',
+  })
+}

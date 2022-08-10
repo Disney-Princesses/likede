@@ -59,7 +59,7 @@ export default {
   padding: 20px;
   width: 22vw;
   height: calc(62vh - 1px);
-  min-height: 605px;
+  min-height: 576px;
   border-radius: 10px;
   background-color: #fff;
 }
@@ -76,7 +76,7 @@ export default {
   }
 }
 .box > .el-row {
-  margin-top: 20px;
+  margin-top: 25px;
   .el-col-4 {
     margin-left: 13px;
     padding-left: 4px;

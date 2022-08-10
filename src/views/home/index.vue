@@ -3,7 +3,7 @@
     <head-edid></head-edid>
     <sku-top></sku-top>
     <My-main></My-main>
-    <div class="dashboard-text">name: {{ name }}</div>
+    <myFloor></myFloor>
   </div>
 </template>
 
@@ -11,6 +11,7 @@
 import headEdid from './conmponents/headEdid.vue'
 import skuTop from './conmponents/skuTop.vue'
 import MyMain from './conmponents/main.vue'
+import myFloor from './conmponents/floor.vue'
 export default {
   data() {
     return {
@@ -25,6 +26,7 @@ export default {
     headEdid,
     skuTop,
     MyMain,
+    myFloor,
   },
 }
 </script>

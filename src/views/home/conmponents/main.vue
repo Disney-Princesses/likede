@@ -328,7 +328,7 @@ export default {
   margin-right: -10px;
   line-height: 1.15;
   // height: calc(66vw - 7px);
-  min-height: 310px;
+  min-height: 280px;
   background: #fff;
   width: calc(67vw - 12px);
   // min-width: 1200px;

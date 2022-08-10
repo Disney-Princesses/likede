@@ -25,8 +25,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // 引入可视化图库
-import * as Echarts from 'echarts'
-Vue.prototype.$Echarts = Echarts
+// import * as Echarts from 'echarts'
+// Vue.prototype.$Echarts = Echarts
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
